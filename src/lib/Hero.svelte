@@ -7,88 +7,62 @@
   let animationFrame;
   let width, height;
 
-  // Configuration
   const LINE_COUNT = 40;
-  const ACCENT_COLOR_RGB = '119, 118, 226'; // #7776E2
-  const SPEED = 0.005; // Very slow flow
-
+  const ACCENT_COLOR_RGB = '119, 118, 226';
+  const SPEED = 0.005;
   let time = 0;
-
-  function init() {
-    resize();
-  }
 
   function resize() {
     if (canvas) {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
     }
   }
 
   function animate() {
     ctx.clearRect(0, 0, width, height);
-
     time += SPEED;
-
     ctx.lineWidth = 1;
-    // Draw multiple overlapping sine waves to create the "ribbon" effect
-    for (let j = 0; j < 3; j++) { // 3 main groups of waves
-      
+
+    for (let j = 0; j < 3; j++) {
       const groupOffset = j * Math.PI * 2 / 3;
-      
       for (let i = 0; i < LINE_COUNT; i++) {
         ctx.beginPath();
-        
-        // Varying opacity for depth
         const alpha = (i / LINE_COUNT) * 0.5 + 0.1;
         ctx.strokeStyle = `rgba(${ACCENT_COLOR_RGB}, ${alpha})`;
 
-        // Moving lines
         for (let x = 0; x < width; x += 5) {
-          // Complex wave function for organic look
-          // y = Center + Amplitude * sin(Frequency * x + Phase)
-          
           const yOffset = height / 2;
-          
           const wave1 = Math.sin(x * 0.002 + time + groupOffset + i * 0.05) * 100;
           const wave2 = Math.sin(x * 0.005 - time + i * 0.05) * 50;
           const wave3 = Math.sin(x * 0.01 + time * 0.5) * 20;
-
-          // Add some vertical spread based on line index 'i'
-          const spread = (i - LINE_COUNT/2) * 5; 
-
+          const spread = (i - LINE_COUNT/2) * 5;
           const y = yOffset + wave1 + wave2 + wave3 + spread;
 
-          if (x === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
         ctx.stroke();
       }
     }
-
     animationFrame = requestAnimationFrame(animate);
   }
 
   onMount(() => {
     if (typeof window !== 'undefined') {
-        ctx = canvas.getContext('2d');
-        window.addEventListener('resize', () => {
-          resize();
-        });
-        init();
-        animate();
+      ctx = canvas.getContext('2d');
+      window.addEventListener('resize', resize);
+      resize();
+      animate();
     }
   });
 
   onDestroy(() => {
     if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', init);
-        cancelAnimationFrame(animationFrame);
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrame);
     }
   });
 </script>
@@ -98,10 +72,16 @@
   
   <div class="container hero-content">
     <Reveal>
-      <h1>Tailored Strategies for <br><span>Unique Businesses.</span></h1>
+      <h1>Turn Ad Spend <br>Into <span>Revenue.</span></h1>
     </Reveal>
-    <Reveal delay={200}>
-      <p>Our process involves thoroughly understanding your objectives and translating them into a comprehensive Media Plan designed to achieve those goals. We partner with you at any stage of your business journey, from initial validation to full-scale growth.</p>
+    <Reveal delay={150}>
+      <p class="subtitle">10 years of paid media expertise. From strategy to execution, I help businesses scale profitably across Google, Meta, TikTok & more.</p>
+    </Reveal>
+    <Reveal delay={300}>
+      <div class="actions">
+        <a href="#/book-a-call" class="btn btn-primary">Book a Strategy Call</a>
+        <a href="#process" class="btn btn-outline">See How It Works</a>
+      </div>
     </Reveal>
   </div>
 </section>
@@ -109,7 +89,7 @@
 <style>
   .hero {
     position: relative;
-    min-height: 90vh; /* Keep it tall */
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -125,27 +105,26 @@
     width: 100%;
     height: 100%;
     z-index: 1;
-    pointer-events: none; /* Let clicks pass through if needed, but we capture mousemove on section */
+    pointer-events: none;
   }
 
   .hero-content {
     position: relative;
-    z-index: 2; /* Sit above canvas */
+    z-index: 2;
     text-align: center;
     max-width: 900px;
-    pointer-events: auto; /* Ensure buttons are clickable */
+    pointer-events: auto;
   }
 
   h1 {
-    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-size: clamp(2.8rem, 7vw, 5rem);
     font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 2rem;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
     letter-spacing: -0.03em;
     color: var(--text-color);
   }
   
-  /* Text gradient emphasis */
   h1 span {
     color: var(--accent-color);
     background: linear-gradient(120deg, var(--accent-color), #a09fe6);
@@ -153,24 +132,65 @@
     -webkit-text-fill-color: transparent;
   }
 
-  p {
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
+  .subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
     color: var(--text-muted);
-    margin-bottom: 3rem;
-    max-width: 700px;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.6;
-    background: rgba(255,255,255,0.8); /* Slight backdrop for legibility */
-    backdrop-filter: blur(4px);
-    padding: 1rem;
-    border-radius: 8px;
   }
 
   .actions {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: 0 4px 14px rgba(119, 118, 226, 0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(119, 118, 226, 0.5);
+    background: #6665d2;
+    color: white;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--text-color);
+  }
+
+  .btn-outline:hover {
+    background: var(--text-color);
+    color: white;
+  }
+
+  @media (max-width: 600px) {
+    .actions {
+      flex-direction: column;
+      align-items: center;
+    }
+    .btn {
+      width: 100%;
+      max-width: 280px;
+      text-align: center;
+    }
   }
 </style>

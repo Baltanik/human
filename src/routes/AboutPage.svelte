@@ -1,100 +1,118 @@
 <script>
   import { onMount } from 'svelte';
-  import { push } from 'svelte-spa-router';
   import Reveal from '../lib/Reveal.svelte';
 
   onMount(() => {
     window.scrollTo(0, 0);
   });
 
-  function handleContactClick(e) {
-    e.preventDefault();
-    push('/');
-    setTimeout(() => {
-      const contactSection = document.getElementById('contact');
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  }
-
-  const values = [
+  const principles = [
     {
-      title: "Work-Life Balance",
-      description: "We focus our energy on delivering exceptional results and tangible value for all. We don't offer empty promises; we provide demonstrable value."
+      title: "No Bullshit Reporting",
+      description: "Clear metrics tied to revenue. I focus on what actually moves your business forward, not vanity metrics."
     },
     {
-      title: "Selective Partnerships",
-      description: "We selectively partner with businesses whose vision we believe in. Your goals are our goals, and we are committed to your values."
+      title: "Fast Communication",
+      description: "I respond within 24 hours. Your time matters, and you deserve answers when you need them."
     },
     {
-      title: "Realistic Expectations",
-      description: "We uphold realistic expectations and value both our clients' and our own time. We are committed to fostering a healthy work environment."
+      title: "Transparent Pricing",
+      description: "Fixed monthly fees or project-based. No hidden costs, no surprises—just straightforward pricing."
     },
     {
-      title: "Respect & Equality",
-      description: "We treat everyone with dignity and expect the same in return. We champion equality and believe every individual deserves fairness and respect."
+      title: "Partnership, Not Vendor",
+      description: "I only work with businesses I believe in. Your success is my success—we're in this together."
     }
+  ];
+
+  const expertise = [
+    { platform: 'Google Ads', years: '10+' },
+    { platform: 'Meta Ads', years: '10+' },
+    { platform: 'TikTok Ads', years: '3+' },
+    { platform: 'LinkedIn Ads', years: '5+' },
+    { platform: 'GA4 & GTM', years: '8+' }
   ];
 </script>
 
 <section class="about-page">
   <div class="container">
-    <!-- Hero -->
+    <!-- Hero with Photo -->
     <Reveal>
       <div class="page-hero">
-        <span class="label">About Us</span>
-        <h1>Human-First Marketing</h1>
-        <p class="tagline">Leveraging AI, technology and data while staying human-centric.</p>
+        <div class="hero-photo">
+          <img src="/1614590410625.jpeg" alt="Arturo Bueno" />
+        </div>
+        <h1>Meet Arturo</h1>
+        <p class="tagline">10 years managing 7-figure ad budgets for top agencies.<br>Now working directly with businesses ready to scale.</p>
       </div>
     </Reveal>
 
-    <!-- Who We Are -->
+    <!-- Story -->
     <Reveal>
-      <div class="section who-we-are">
-        <div class="section-content">
-          <h2>Who We Are</h2>
-          <p class="lead">Human Marketing is a Human-First Agency that leverages AI, technology and data to optimize processes and maximize results, all while staying human-centric.</p>
-          <p>We focus on delivering value to our clients by helping them validate, launch, or scale their businesses with top-notch digital marketing campaigns.</p>
-          <p>Our expertise lies in <strong>Planning</strong>, <strong>Implementation</strong>, and <strong>Measurement</strong> across multiple paid advertising platforms.</p>
-          <p class="highlight">We craft state-of-the-art digital marketing campaigns.</p>
+      <div class="section story-section">
+        <h2>The Story</h2>
+        <div class="story-content">
+          <p class="lead">After a decade working with major marketing agencies managing multi-million dollar campaigns, I realized something: great businesses often struggle to get the senior-level expertise they need without the overhead of a full agency.</p>
+          
+          <p>I founded Human to bridge that gap. You get direct access to someone who's managed campaigns at scale, knows the platforms inside out, and treats your budget like it's their own.</p>
+          
+          <p>No account managers playing telephone. No junior staff learning on your dime. Just experienced, strategic paid media management focused on one thing: <strong>turning your ad spend into revenue.</strong></p>
         </div>
       </div>
     </Reveal>
 
-    <!-- Values -->
-    <div class="section values-section">
+    <!-- Expertise -->
+    <div class="section expertise-section">
       <Reveal>
-        <h2>Our Values</h2>
+        <h2>Platform Expertise</h2>
       </Reveal>
-      <div class="values-grid">
-        {#each values as value, i}
-          <Reveal delay={i * 100}>
-            <div class="value-card">
-              <h3>{value.title}</h3>
-              <p>{value.description}</p>
+      <div class="expertise-grid">
+        {#each expertise as item, i}
+          <Reveal delay={i * 80}>
+            <div class="expertise-card">
+              <span class="years">{item.years}</span>
+              <span class="platform">{item.platform}</span>
             </div>
           </Reveal>
         {/each}
       </div>
     </div>
 
-    <!-- What Makes Us Human -->
+    <!-- Principles -->
+    <div class="section principles-section">
+      <Reveal>
+        <h2>How I Work</h2>
+      </Reveal>
+      <div class="principles-grid">
+        {#each principles as principle, i}
+          <Reveal delay={i * 100}>
+            <div class="principle-card">
+              <h3>{principle.title}</h3>
+              <p>{principle.description}</p>
+            </div>
+          </Reveal>
+        {/each}
+      </div>
+    </div>
+
+    <!-- Stats -->
     <Reveal>
-      <div class="section human-section">
-        <h2>What Makes Us Human</h2>
-        <div class="human-content">
-          <blockquote>
-            <p>At the heart of our agency are human connections. We prioritize people—both our clients and our collaborators—recognizing that our work is fundamentally for and about individuals.</p>
-            
-            <p>We believe in a work-life balance, focusing our energy on delivering exceptional results and tangible value for all. We don't offer empty promises; we provide demonstrable value.</p>
-            
-            <p>We selectively partner with businesses whose vision we believe in. Your goals are our goals, and we are committed to your values, understanding that your success is intrinsically linked to our own.</p>
-            
-            <p>We uphold realistic expectations and we value both our clients' and our own time. We are committed to fostering a healthy work environment.</p>
-            
-            <p>Respect is paramount. We treat everyone with dignity and expect the same in return. We champion equality and believe every individual deserves to be treated with fairness and respect.</p>
-          </blockquote>
+      <div class="stats-banner">
+        <div class="stat">
+          <span class="stat-value">10+</span>
+          <span class="stat-label">Years Experience</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">7-Fig</span>
+          <span class="stat-label">Budgets Managed</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">100+</span>
+          <span class="stat-label">Campaigns Launched</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">3</span>
+          <span class="stat-label">Languages Fluent</span>
         </div>
       </div>
     </Reveal>
@@ -102,9 +120,9 @@
     <!-- CTA -->
     <Reveal>
       <div class="bottom-cta">
-        <h2>Ready to Work Together?</h2>
-        <p>Let's see if we're the right fit for your business.</p>
-        <button class="btn btn-large" on:click={handleContactClick}>Get in Touch</button>
+        <h2>Let's Talk</h2>
+        <p>Book a free 30-minute call. I'll review your current setup and share honest feedback—no strings attached.</p>
+        <a href="#/book-a-call" class="btn btn-large">Book a Call</a>
       </div>
     </Reveal>
   </div>
@@ -117,35 +135,42 @@
     min-height: 100vh;
   }
 
+  /* Hero */
   .page-hero {
     text-align: center;
-    margin-bottom: 5rem;
-    max-width: 800px;
+    margin-bottom: 6rem;
+    max-width: 700px;
     margin-left: auto;
     margin-right: auto;
   }
 
-  .label {
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--accent-color);
-    font-size: 0.9rem;
-    font-weight: 700;
-    display: block;
-    margin-bottom: 1rem;
+  .hero-photo {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid var(--accent-light);
+    box-shadow: 0 10px 50px rgba(119, 118, 226, 0.2);
+  }
+
+  .hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .page-hero h1 {
-    font-size: 4rem;
+    font-size: 3.5rem;
     letter-spacing: -0.03em;
     margin-bottom: 1rem;
     color: var(--text-color);
   }
 
   .tagline {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   /* Sections */
@@ -158,116 +183,141 @@
     margin-bottom: 2rem;
     color: var(--text-color);
     letter-spacing: -0.02em;
+    text-align: center;
   }
 
-  /* Who We Are */
-  .who-we-are {
+  /* Story */
+  .story-section {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
   }
 
-  .section-content p {
+  .story-content p {
     font-size: 1.15rem;
     color: var(--text-muted);
     line-height: 1.8;
     margin-bottom: 1.5rem;
   }
 
-  .section-content .lead {
+  .story-content .lead {
     font-size: 1.3rem;
     color: var(--text-color);
     font-weight: 500;
   }
 
-  .section-content .highlight {
-    font-size: 1.2rem;
-    color: var(--accent-color);
-    font-weight: 600;
-    margin-top: 2rem;
+  /* Expertise */
+  .expertise-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .expertise-card {
+    background: white;
     padding: 1.5rem;
-    background: rgba(119, 118, 226, 0.05);
     border-radius: 12px;
     text-align: center;
-  }
-
-  /* Values */
-  .values-section h2 {
-    text-align: center;
-  }
-
-  .values-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .value-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 16px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
   }
 
-  .value-card:hover {
-    box-shadow: 0 8px 32px rgba(119, 118, 226, 0.1);
-    border-color: rgba(119, 118, 226, 0.2);
+  .expertise-card:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 24px rgba(119, 118, 226, 0.15);
     transform: translateY(-4px);
   }
 
-  .value-card h3 {
+  .expertise-card .years {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .expertise-card .platform {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  /* Principles */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .principle-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    border-left: 4px solid var(--accent-color);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+  }
+
+  .principle-card:hover {
+    box-shadow: 0 8px 32px rgba(119, 118, 226, 0.15);
+    transform: translateY(-4px);
+  }
+
+  .principle-card h3 {
     font-size: 1.3rem;
     margin-bottom: 0.75rem;
     color: var(--text-color);
   }
 
-  .value-card p {
+  .principle-card p {
     font-size: 1rem;
     color: var(--text-muted);
     line-height: 1.6;
     margin: 0;
   }
 
-  /* What Makes Us Human */
-  .human-section {
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .human-section h2 {
-    text-align: center;
-  }
-
-  .human-content {
-    background: linear-gradient(135deg, rgba(119, 118, 226, 0.05) 0%, rgba(119, 118, 226, 0.02) 100%);
+  /* Stats Banner */
+  .stats-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, var(--accent-color) 0%, #8b8ae0 100%);
     border-radius: 20px;
-    padding: 3rem;
-    border-left: 4px solid var(--accent-color);
+    margin: 4rem 0;
   }
 
-  blockquote {
-    margin: 0;
+  .stat {
+    text-align: center;
+    color: white;
   }
 
-  blockquote p {
-    font-size: 1.1rem;
-    color: var(--text-color);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
+  .stat-value {
+    display: block;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.5rem;
   }
 
-  blockquote p:last-child {
-    margin-bottom: 0;
+  .stat-label {
+    display: block;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   /* Bottom CTA */
   .bottom-cta {
     text-align: center;
     padding: 5rem 2rem;
-    background: linear-gradient(135deg, rgba(119, 118, 226, 0.08) 0%, rgba(119, 118, 226, 0.03) 100%);
+    background: white;
     border-radius: 24px;
     border: 2px solid rgba(119, 118, 226, 0.2);
   }
@@ -276,41 +326,59 @@
     font-size: 2.5rem;
     margin-bottom: 1rem;
     color: var(--text-color);
-    letter-spacing: -0.02em;
   }
 
   .bottom-cta p {
     font-size: 1.2rem;
     color: var(--text-muted);
     margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .btn-large {
-    padding: 1rem 2.5rem;
+    display: inline-block;
+    padding: 1.2rem 3rem;
     font-size: 1.1rem;
-  }
-
-  button.btn {
     background: var(--accent-color);
     color: white;
-    border: none;
-    cursor: pointer;
-    padding: 0.8rem 1.8rem;
     border-radius: 8px;
+    text-decoration: none;
     font-weight: 600;
-    font-size: 1rem;
     transition: all 0.3s ease;
   }
 
-  button.btn:hover {
+  .btn-large:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(119, 118, 226, 0.3);
+    box-shadow: 0 8px 24px rgba(119, 118, 226, 0.4);
+    background: #6665d2;
+    color: white;
   }
 
   /* Responsive */
+  @media (max-width: 900px) {
+    .expertise-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .principles-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stats-banner {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
   @media (max-width: 768px) {
     .about-page {
       padding: 6rem 0 3rem;
+    }
+
+    .hero-photo {
+      width: 150px;
+      height: 150px;
     }
 
     .page-hero h1 {
@@ -325,12 +393,18 @@
       font-size: 2rem;
     }
 
-    .values-grid {
-      grid-template-columns: 1fr;
+    .expertise-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
 
-    .human-content {
-      padding: 2rem;
+    .stats-banner {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 2rem 1.5rem;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
     }
 
     .bottom-cta {
