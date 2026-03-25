@@ -104,3 +104,5 @@ button {
   color: #fff !important;
   box-shadow: none;
 }
+
+/* About page scroll gradient: managed inline via Svelte reactive style */

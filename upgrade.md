@@ -169,7 +169,7 @@ Versione compatta dell'attuale timeline, meno scroll-intensive
 [Foto piccola di Arturo]
 
 "I'm Arturo. After 10 years working with top agencies managing 
-7-figure budgets, I founded Human to give businesses direct access 
+6-figure budgets, I founded Human to give businesses direct access 
 to senior-level paid media expertise—without the agency overhead.
 
 I speak English, Spanish, and Italian fluently."

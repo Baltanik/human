@@ -6,7 +6,7 @@
   <div class="container">
     <div class="footer-main">
       <div class="footer-brand">
-        <h3>Human</h3>
+        <h3>Human Marketing</h3>
         <p>Senior-level paid media expertise.<br>Without the agency overhead.</p>
         <div class="socials">
           <a href="https://linkedin.com/in/arturobueno" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
@@ -32,6 +32,13 @@
           <ul>
             <li><a href="#/book-a-call">Book a Call</a></li>
             <li><a href="mailto:arturo@wearehumanmarketing.com">Email Me</a></li>
+          </ul>
+        </div>
+
+        <div class="link-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#/blog">Blog</a></li>
           </ul>
         </div>
       </div>
@@ -106,7 +113,7 @@
   /* Links Section */
   .footer-links {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 4rem;
   }
 

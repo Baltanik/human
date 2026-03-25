@@ -10,7 +10,7 @@
       
       <div class="cta-wrapper">
         <a href="#/book-a-call" class="btn btn-lg">
-          Book a Strategy Call
+          Let's Talk
         </a>
       </div>
       

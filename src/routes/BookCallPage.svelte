@@ -15,12 +15,81 @@
     Package,
     Linkedin,
     Image,
-    HelpCircle
+    HelpCircle,
+    ChevronRight,
+    ChevronLeft,
+    User,
+    TrendingUp,
+    Calendar
   } from 'lucide-svelte';
 
-  onMount(() => {
+  let calendlyUrl = '';
+
+  onMount(async () => {
     window.scrollTo(0, 0);
+
+    // Load Calendly URL from backend settings
+    try {
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const res = await fetch(`${apiBase}/api/settings`);
+      if (res.ok) {
+        const data = await res.json();
+        calendlyUrl = data.calendly_url || '';
+      }
+    } catch {
+      // non-blocking
+    }
+
   });
+
+  // Svelte action: called when the calendly div is mounted
+  function calendlyEmbed(node, url) {
+    function init() {
+      if (window.Calendly) {
+        window.Calendly.initInlineWidget({
+          url,
+          parentElement: node,
+          prefill: {},
+          utm: {}
+        });
+      }
+    }
+
+    // Load script if not already present, then init
+    if (window.Calendly) {
+      init();
+    } else {
+      const existing = document.getElementById('calendly-script');
+      if (existing) {
+        existing.addEventListener('load', init, { once: true });
+      } else {
+        const s = document.createElement('script');
+        s.id = 'calendly-script';
+        s.src = 'https://assets.calendly.com/assets/external/widget.js';
+        s.async = true;
+        s.addEventListener('load', init, { once: true });
+        document.head.appendChild(s);
+      }
+    }
+
+    // Also load Calendly CSS if not present
+    if (!document.getElementById('calendly-css')) {
+      const link = document.createElement('link');
+      link.id = 'calendly-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://assets.calendly.com/assets/external/widget.css';
+      document.head.appendChild(link);
+    }
+
+    return {
+      destroy() {
+        node.innerHTML = '';
+      }
+    };
+  }
+
+  let currentStep = 1;
+  const TOTAL_STEPS = 4;
 
   let formData = {
     firstName: '',
@@ -36,6 +105,10 @@
   let isSubmitting = false;
   let submitSuccess = false;
   let submitError = '';
+  let step1Error = '';
+  let step2Error = '';
+  let step3Error = '';
+  let step4Error = '';
 
   const budgetOptions = [
     { value: '0-1000', label: '€0 - €1.000', description: 'Testing the waters' },
@@ -58,6 +131,13 @@
     { value: 'unknown', label: "I don't know yet", icon: HelpCircle }
   ];
 
+  const steps = [
+    { number: 1, label: 'Your Info', icon: User },
+    { number: 2, label: 'Budget', icon: TrendingUp },
+    { number: 3, label: 'Platforms', icon: Monitor },
+    { number: 4, label: 'Book Call', icon: Calendar }
+  ];
+
   function togglePlatform(value) {
     if (formData.platforms.includes(value)) {
       formData.platforms = formData.platforms.filter(p => p !== value);
@@ -66,27 +146,79 @@
     }
   }
 
+  function validateStep1() {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.company) {
+      step1Error = 'Please fill in all required fields.';
+      return false;
+    }
+    step1Error = '';
+    return true;
+  }
+
+  function validateStep2() {
+    if (!formData.budget) {
+      step2Error = 'Please select your monthly ad budget.';
+      return false;
+    }
+    step2Error = '';
+    return true;
+  }
+
+  function validateStep3() {
+    if (formData.platforms.length === 0) {
+      step3Error = 'Please select at least one advertising platform.';
+      return false;
+    }
+    step3Error = '';
+    return true;
+  }
+
+  function goNext() {
+    if (currentStep === 1 && !validateStep1()) return;
+    if (currentStep === 2 && !validateStep2()) return;
+    if (currentStep === 3 && !validateStep3()) return;
+    if (currentStep < TOTAL_STEPS) currentStep += 1;
+  }
+
+  function goBack() {
+    if (currentStep > 1) currentStep -= 1;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!validateStep3()) return;
+
     isSubmitting = true;
     submitError = '';
 
-    // Simulate form submission - replace with actual API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // TODO: Replace with actual form submission endpoint
-      console.log('Form submitted:', formData);
-      
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const res = await fetch(`${apiBase}/api/contacts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          company: formData.company,
+          website: formData.website,
+          budget: formData.budget,
+          platforms: formData.platforms,
+          goals: formData.goals
+        })
+      });
+      if (!res.ok) throw new Error('Server error');
       submitSuccess = true;
-    } catch (error) {
+    } catch {
       submitError = 'Something went wrong. Please try again or email us directly.';
     } finally {
       isSubmitting = false;
     }
   }
 
-  $: isFormValid = formData.firstName && formData.lastName && formData.email && formData.company && formData.budget && formData.platforms.length > 0;
+  $: isStep1Valid = formData.firstName && formData.lastName && formData.email && formData.company;
+  $: isStep2Valid = !!formData.budget;
+  $: isStep3Valid = formData.platforms.length > 0;
 </script>
 
 <section class="book-call-page">
@@ -146,158 +278,245 @@
           </Reveal>
         </div>
 
-        <!-- Right side - Form -->
+        <!-- Right side - Wizard Form -->
         <div class="form-side">
           <Reveal delay={150}>
+            <!-- Step indicator -->
+            <div class="step-indicator">
+              {#each steps as step}
+                <div class="step-item" class:active={currentStep === step.number} class:completed={currentStep > step.number}>
+                  <div class="step-circle">
+                    {#if currentStep > step.number}
+                      <Check size={16} strokeWidth={3} />
+                    {:else}
+                      <svelte:component this={step.icon} size={16} strokeWidth={2} />
+                    {/if}
+                  </div>
+                  <span class="step-label">{step.label}</span>
+                </div>
+                {#if step.number < TOTAL_STEPS}
+                  <div class="step-line" class:filled={currentStep > step.number}></div>
+                {/if}
+              {/each}
+            </div>
+
             <form on:submit={handleSubmit}>
-              <!-- Name Section -->
-              <div class="form-section">
-                <h3>Your Information</h3>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="firstName">First Name <span class="required">*</span></label>
-                    <input 
-                      type="text" 
-                      id="firstName" 
-                      bind:value={formData.firstName}
-                      placeholder="John"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="lastName">Last Name <span class="required">*</span></label>
-                    <input 
-                      type="text" 
-                      id="lastName" 
-                      bind:value={formData.lastName}
-                      placeholder="Doe"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div class="form-group">
-                  <label for="email">Email <span class="required">*</span></label>
-                  <input 
-                    type="email" 
-                    id="email" 
-                    bind:value={formData.email}
-                    placeholder="john@company.com"
-                    required
-                  />
-                </div>
-              </div>
 
-              <!-- Company Section -->
-              <div class="form-section">
-                <h3>Your Business</h3>
-                <div class="form-group">
-                  <label for="company">Company Name or Social Handle <span class="required">*</span></label>
-                  <input 
-                    type="text" 
-                    id="company" 
-                    bind:value={formData.company}
-                    placeholder="Acme Inc. or @yourhandle"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="website">Company Website</label>
-                  <div class="input-prefix">
-                    <span>https://</span>
-                    <input 
-                      type="text" 
-                      id="website" 
-                      bind:value={formData.website}
-                      placeholder="www.yourcompany.com"
-                    />
+              <!-- STEP 1: Your Information + Your Business -->
+              {#if currentStep === 1}
+                <div class="step-content">
+                  <div class="step-header">
+                    <h2>About you</h2>
+                    <p>Tell us a bit about yourself and your business.</p>
                   </div>
-                </div>
-              </div>
 
-              <!-- Budget Section -->
-              <div class="form-section">
-                <h3>Monthly Ad Budget <span class="required">*</span></h3>
-                <p class="section-hint">What's your average monthly paid media investment?</p>
-                <div class="budget-grid">
-                  {#each budgetOptions as option}
-                    <label class="budget-option" class:selected={formData.budget === option.value}>
-                      <input 
-                        type="radio" 
-                        name="budget" 
-                        value={option.value}
-                        bind:group={formData.budget}
-                      />
-                      <div class="budget-content">
-                        <span class="budget-label">{option.label}</span>
-                        <span class="budget-desc">{option.description}</span>
+                  <div class="form-section">
+                    <h3>Your Information</h3>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="firstName">First Name <span class="required">*</span></label>
+                        <input 
+                          type="text" 
+                          id="firstName" 
+                          bind:value={formData.firstName}
+                          placeholder="John"
+                        />
                       </div>
-                    </label>
-                  {/each}
-                </div>
-              </div>
-
-              <!-- Platforms Section -->
-              <div class="form-section">
-                <h3>Advertising Platforms <span class="required">*</span></h3>
-                <p class="section-hint">Which platforms are you currently using or planning to use?</p>
-                <div class="platforms-grid">
-                  {#each platformOptions as platform}
-                    <label 
-                      class="platform-option" 
-                      class:selected={formData.platforms.includes(platform.value)}
-                    >
-                      <input 
-                        type="checkbox" 
-                        value={platform.value}
-                        checked={formData.platforms.includes(platform.value)}
-                        on:change={() => togglePlatform(platform.value)}
-                      />
-                      <div class="platform-icon">
-                        <svelte:component this={platform.icon} size={20} strokeWidth={2} />
+                      <div class="form-group">
+                        <label for="lastName">Last Name <span class="required">*</span></label>
+                        <input 
+                          type="text" 
+                          id="lastName" 
+                          bind:value={formData.lastName}
+                          placeholder="Doe"
+                        />
                       </div>
-                      <span class="platform-label">{platform.label}</span>
-                    </label>
-                  {/each}
-                </div>
-              </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email <span class="required">*</span></label>
+                      <input 
+                        type="email" 
+                        id="email" 
+                        bind:value={formData.email}
+                        placeholder="john@company.com"
+                      />
+                    </div>
+                  </div>
 
-              <!-- Goals Section -->
-              <div class="form-section">
-                <h3>Your Goals</h3>
-                <p class="section-hint">Tell us about your business goals and how we could collaborate.</p>
-                <div class="form-group">
-                  <textarea 
-                    id="goals" 
-                    bind:value={formData.goals}
-                    placeholder="We're looking to scale our e-commerce business and need help with..."
-                    rows="4"
-                  ></textarea>
-                </div>
-              </div>
+                  <div class="form-section">
+                    <h3>Your Business</h3>
+                    <div class="form-group">
+                      <label for="company">Company Name or Social Handle <span class="required">*</span></label>
+                      <input 
+                        type="text" 
+                        id="company" 
+                        bind:value={formData.company}
+                        placeholder="Acme Inc. or @yourhandle"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="website">Company Website</label>
+                      <div class="input-prefix">
+                        <span>https://</span>
+                        <input 
+                          type="text" 
+                          id="website" 
+                          bind:value={formData.website}
+                          placeholder="www.yourcompany.com"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-              {#if submitError}
-                <div class="error-message">
-                  {submitError}
+                  {#if step1Error}
+                    <div class="error-message">{step1Error}</div>
+                  {/if}
+
+                  <div class="step-actions">
+                    <button type="button" class="btn btn-next" on:click={goNext}>
+                      Continue
+                      <ChevronRight size={18} strokeWidth={2.5} />
+                    </button>
+                  </div>
                 </div>
               {/if}
 
-              <button 
-                type="submit" 
-                class="btn btn-submit"
-                disabled={!isFormValid || isSubmitting}
-              >
-                {#if isSubmitting}
-                  <span class="spinner"></span>
-                  Sending...
-                {:else}
-                  Book Your Free Call
-                {/if}
-              </button>
+              <!-- STEP 2: Monthly Ad Budget -->
+              {#if currentStep === 2}
+                <div class="step-content">
+                  <div class="step-header">
+                    <h2>Monthly Ad Budget</h2>
+                    <p>What's your average monthly paid media investment?</p>
+                  </div>
 
-              <p class="privacy-note">
-                By submitting, you agree to be contacted about our services. We respect your privacy.
-              </p>
+                  <div class="budget-grid">
+                    {#each budgetOptions as option}
+                      <label class="budget-option" class:selected={formData.budget === option.value}>
+                        <input 
+                          type="radio" 
+                          name="budget" 
+                          value={option.value}
+                          bind:group={formData.budget}
+                        />
+                        <div class="budget-content">
+                          <span class="budget-label">{option.label}</span>
+                          <span class="budget-desc">{option.description}</span>
+                        </div>
+                      </label>
+                    {/each}
+                  </div>
+
+                  {#if step2Error}
+                    <div class="error-message">{step2Error}</div>
+                  {/if}
+
+                  <div class="step-actions">
+                    <button type="button" class="btn-back" on:click={goBack}>
+                      <ChevronLeft size={18} strokeWidth={2.5} />
+                      Back
+                    </button>
+                    <button type="button" class="btn btn-next" on:click={goNext}>
+                      Continue
+                      <ChevronRight size={18} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                </div>
+              {/if}
+
+              <!-- STEP 3: Advertising Platforms -->
+              {#if currentStep === 3}
+                <div class="step-content">
+                  <div class="step-header">
+                    <h2>Advertising Platforms</h2>
+                    <p>Which platforms are you currently using or planning to use?</p>
+                  </div>
+
+                  <div class="platforms-grid">
+                    {#each platformOptions as platform}
+                      <label 
+                        class="platform-option" 
+                        class:selected={formData.platforms.includes(platform.value)}
+                      >
+                        <input 
+                          type="checkbox" 
+                          value={platform.value}
+                          checked={formData.platforms.includes(platform.value)}
+                          on:change={() => togglePlatform(platform.value)}
+                        />
+                        <div class="platform-icon">
+                          <svelte:component this={platform.icon} size={20} strokeWidth={2} />
+                        </div>
+                        <span class="platform-label">{platform.label}</span>
+                      </label>
+                    {/each}
+                  </div>
+
+                  {#if step3Error}
+                    <div class="error-message">{step3Error}</div>
+                  {/if}
+
+                  <div class="step-actions">
+                    <button type="button" class="btn-back" on:click={goBack}>
+                      <ChevronLeft size={18} strokeWidth={2.5} />
+                      Back
+                    </button>
+                    <button type="button" class="btn btn-next" on:click={goNext}>
+                      Continue
+                      <ChevronRight size={18} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                </div>
+              {/if}
+
+              <!-- STEP 4: Book Your Call (Calendly embed) -->
+              {#if currentStep === 4}
+                <div class="step-content">
+                  <div class="step-header">
+                    <h2>Book Your Free Call</h2>
+                    <p>Pick a date and time that works for you. 30 minutes, no strings attached.</p>
+                  </div>
+
+                  {#if calendlyUrl}
+                    <div
+                      use:calendlyEmbed={calendlyUrl + '?hide_event_type_details=1&hide_gdpr_banner=1'}
+                      style="min-width:280px;height:660px;"
+                    ></div>
+                  {:else}
+                    <div class="calendly-missing">
+                      <Calendar size={32} />
+                      <p>Calendario non ancora configurato.<br>Inserisci il link Calendly dal pannello admin.</p>
+                    </div>
+                  {/if}
+
+                  {#if submitError}
+                    <div class="error-message">{submitError}</div>
+                  {/if}
+
+                  <div class="step-actions">
+                    <button type="button" class="btn-back" on:click={goBack}>
+                      <ChevronLeft size={18} strokeWidth={2.5} />
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-submit"
+                      disabled={isSubmitting}
+                    >
+                      {#if isSubmitting}
+                        <span class="spinner"></span>
+                        Sending...
+                      {:else}
+                        Confirm Booking
+                      {/if}
+                    </button>
+                  </div>
+
+                  <p class="privacy-note">
+                    By submitting, you agree to be contacted about our services. We respect your privacy.
+                  </p>
+                </div>
+              {/if}
+
             </form>
           </Reveal>
         </div>
@@ -307,6 +526,27 @@
 </section>
 
 <style>
+  .calendly-missing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem 2rem;
+    background: #fafafa;
+    border: 2px dashed #e0e0e0;
+    border-radius: 16px;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .calendly-missing p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+    color: #bbb;
+  }
+
   .book-call-page {
     padding: 8rem 0 4rem;
     background: linear-gradient(180deg, rgba(119, 118, 226, 0.03) 0%, var(--bg-color) 50%);
@@ -396,33 +636,127 @@
     border: 1px solid rgba(0, 0, 0, 0.04);
   }
 
+  /* Step Indicator */
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    background: #fafafa;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+  }
+
+  .step-item.active .step-circle {
+    border-color: var(--accent-color);
+    background: var(--accent-color);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(119, 118, 226, 0.15);
+  }
+
+  .step-item.completed .step-circle {
+    border-color: var(--accent-color);
+    background: var(--accent-color);
+    color: white;
+  }
+
+  .step-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .step-item.active .step-label,
+  .step-item.completed .step-label {
+    color: var(--accent-color);
+  }
+
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: rgba(0, 0, 0, 0.08);
+    margin: 0 0.5rem;
+    margin-bottom: 1.4rem;
+    transition: background 0.3s ease;
+  }
+
+  .step-line.filled {
+    background: var(--accent-color);
+  }
+
+  /* Step Content */
+  .step-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .step-header {
+    margin-bottom: 0.5rem;
+  }
+
+  .step-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
+  }
+
+  .step-header p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
   form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
   }
 
   .form-section {
-    padding-bottom: 2rem;
+    padding-bottom: 1.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.5rem;
   }
 
   .form-section:last-of-type {
     border-bottom: none;
     padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .form-section h3 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text-color);
     margin-bottom: 0.5rem;
   }
 
   .section-hint {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
     margin-bottom: 1rem;
+    margin-top: 0.25rem;
   }
 
   .form-row {
@@ -462,6 +796,7 @@
     transition: all 0.2s ease;
     background: #fafafa;
     font-family: inherit;
+    box-sizing: border-box;
   }
 
   input[type="text"]:focus,
@@ -609,19 +944,63 @@
     color: var(--text-color);
   }
 
-  /* Textarea */
-  textarea {
-    resize: vertical;
-    min-height: 100px;
+  /* Calendar embed */
+  .calendar-embed {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(0, 0, 0, 0.06);
+    background: #fafafa;
+  }
+
+  /* Step Actions */
+  .step-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn-next {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    background: #f5f5f5;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    color: #555;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .btn-back:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    color: #222;
+    background: #ebebeb;
   }
 
   /* Submit Button */
   .btn-submit {
-    width: 100%;
-    padding: 1.1rem 2rem;
-    font-size: 1.1rem;
+    flex: 1;
+    padding: 1rem 2rem;
+    font-size: 1rem;
     font-weight: 700;
-    margin-top: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -635,8 +1014,8 @@
   }
 
   .spinner {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-top-color: white;
     border-radius: 50%;
@@ -651,16 +1030,16 @@
     font-size: 0.8rem;
     color: var(--text-muted);
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 0.75rem;
   }
 
   .error-message {
-    padding: 1rem;
+    padding: 0.9rem 1rem;
     background: #fee2e2;
     border: 1px solid #fecaca;
     border-radius: 12px;
     color: #dc2626;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
   }
 
   /* Success State */
@@ -744,6 +1123,10 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0.25rem;
+    }
+
+    .step-label {
+      display: none;
     }
   }
 </style>

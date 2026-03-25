@@ -1,7 +1,8 @@
 <script>
   import { onMount } from 'svelte';
   import Reveal from '../lib/Reveal.svelte';
-  import { CheckCircle2 } from 'lucide-svelte';
+  import { CheckCircle2, Plus, Minus } from 'lucide-svelte';
+  import Contact from '../lib/Contact.svelte';
 
   onMount(() => {
     window.scrollTo(0, 0);
@@ -10,56 +11,116 @@
   const packages = [
     {
       name: "Audit & Strategy",
-      tagline: "Know where you stand and where to go next",
-      price: "One-time project",
+      tagline: "Know where you stand and where to go next.",
+      billing: "One-time project",
+      price: "€200",
+      priceNote: "(from €400 regular fee)",
       description: "Perfect for businesses that need clarity before investing in paid media.",
       includes: [
-        "Complete ad account audit (Google, Meta, or both)",
-        "Competitor analysis & market research",
-        "Media plan with channel recommendations",
-        "Budget allocation strategy",
-        "Technical tracking review",
-        "1-hour strategy call with detailed report"
+        "In depth ad account audit (2 platforms)",
+        "Competitor Analysis & Market Research (2 competitors)",
+        "Personalized media plan with specific channel recommendations",
+        "Budget allocation strategy (3 month planning)",
+        "Technical tracking review (GTM, Pixel and Google Conversion Tracking)",
+        "1-hour call with actionable insights and strategic overview",
+        "Report in PDF for you to keep."
       ],
-      note: "Audit fee deducted if you proceed with implementation.",
-      cta: "Get Your Audit",
+      bonus: "50% of the audit fee cost will be deducted if you proceed with implementation.",
+      delivery: "Delivered within 3 working days",
+      cta: "Get your audit today!",
+      highlight: false
+    },
+    {
+      name: "Full Management",
+      badge: "Best Offer",
+      tagline: "Your dedicated in-house paid media expert",
+      billing: "Fixed Monthly Fee*",
+      price: "From €985",
+      priceNote: "(from €1.250)",
+      description: "End-to-end campaign management. You focus on your core business, I handle the growth.",
+      includes: [
+        "Full Account Management & Optimization (2 platforms)",
+        "Results oriented setup",
+        "Weekly Performance Review with dedicated Report tailored to your Business",
+        "A/B testing strategy for Creatives, Audiences and Bidding",
+        "Ad Creative guidance & performance recommendations",
+        "Direct communications (dedicated Slack Channel)",
+        "3-months commitment"
+      ],
+      note: "Perfect for scale-ups and startups looking to grow sustainably. No retainer fee on budgets under $3.500 USD or €3.000 EUR.",
+      cta: "Let's grow together",
       highlight: false
     },
     {
       name: "Campaign Launch",
       tagline: "Professional setup built to scale",
-      price: "One-time or project-based",
-      description: "For businesses ready to launch or rebuild their paid campaigns the right way.",
+      billing: "One-time or Project based",
+      price: "€650",
+      priceNote: "(Project Delivered)",
+      description: "For businesses ready to launch or rebuild their paid campaign the right way. Weekly engagement.",
       includes: [
-        "Full campaign architecture (Google/Meta/TikTok/LinkedIn)",
-        "Conversion tracking setup (GA4, GTM, pixels)",
-        "Landing page optimization recommendations",
-        "A/B test framework implementation",
-        "2 weeks of monitoring & initial optimizations",
-        "Campaign handoff documentation"
+        "Full campaign architecture (1 platform)",
+        "Conversion Tracking Setup (GA4, Meta Pixel or Google Conversion Tracking)",
+        "Landing Page Optimization Recommendations and Best Practices",
+        "A/B testing framework",
+        "2 Weeks Management after Campaigns are launched.",
+        "Possibility to increase the duration of the management for an extra weekly fee (+€150/week)",
+        "Campaign reporting and written handover documentation."
       ],
-      note: "Can be combined with ongoing management.",
-      cta: "Launch Your Campaigns",
+      note: "Perfect for startups and businesses with specific goals (promotions, product launch, smoke tests, business validation). No retainer fees for budgets under €2.000/month or $2.500 USD.",
+      cta: "Launch your new campaigns now",
       highlight: true
-    },
-    {
-      name: "Full Management",
-      tagline: "Your in-house paid media team",
-      price: "Monthly retainer",
-      description: "End-to-end campaign management. You focus on your business, I handle the growth.",
-      includes: [
-        "Complete account management (all platforms)",
-        "Weekly performance monitoring & optimization",
-        "Monthly strategy calls + detailed reporting",
-        "Ongoing A/B testing & CRO",
-        "Ad creative guidance & recommendations",
-        "Direct Slack/email access (24h response)"
-      ],
-      note: "Minimum 3-month commitment. Pricing based on ad spend.",
-      cta: "Let's Talk",
-      highlight: false
     }
   ];
+
+  const faqs = [
+    {
+      question: "Which platforms do you work with?",
+      answer: `
+        <p>I work with almost every self-service paid media platform and the essential marketing technology stack required for robust management. We choose the right platforms for your specific objectives, but my experience includes:</p>
+        <ul class="faq-list">
+          <li><strong>Core Paid Media Channels</strong></li>
+          <li><strong>Search & Display:</strong> Google Ads, Bing Ads</li>
+          <li><strong>Social & Video:</strong> Meta Ads (Facebook/Instagram), TikTok Ads, LinkedIn Ads, X (formerly Twitter), Pinterest, Reddit</li>
+          <li><strong>E-commerce:</strong> Amazon Ads</li>
+        </ul>
+      `
+    },
+    {
+      question: "What industries do you specialize in?",
+      answer: `
+        <p>I’ve worked in multiple industries from retail to high-growth DTC (Direct-to-Consumer), B2C, and B2B brands. My experience is broad, covering everything from:</p>
+        <ul class="faq-list">
+          <li>B2B & Lead Generation (For professional services and companies focused on acquiring qualified leads)</li>
+          <li>Fashion & Apparel</li>
+          <li>Beauty & Wellness</li>
+          <li>Energy & Automotive</li>
+          <li>Sporting Goods & Supplements</li>
+          <li>Specialty E-commerce</li>
+        </ul>
+      `
+    },
+    {
+      question: "Do you work with small budgets?",
+      answer: "<p>I support businesses from the ground up and have structured my services to ensure high-level expertise is accessible even with smaller advertising budgets.</p>"
+    },
+    {
+      question: "How quickly can we start?",
+      answer: `
+        <p>The short answer is: The process is rapid and client-driven. We can move from agreement to action in approximately one week, once the necessary onboarding steps are finalized:</p>
+        <ul class="faq-list">
+          <li><strong>Formal Agreement:</strong> The initial step is agreeing on the collaboration terms and the prompt sign-off of a flexible service contract.</li>
+          <li><strong>Platform Access:</strong> Immediate access is required to your key marketing ecosystem. This typically includes your advertising accounts (e.g., Google Ads, Meta Ads), your analytics platforms (e.g., Google Analytics, Looker Studio), and your business manager/asset accounts to ensure proper tracking and campaign setup.</li>
+          <li><strong>Project Kick-off:</strong> Once the contract is signed and all platform access is secured, the standard timeframe is approximately one week to complete the initial setup, a final tracking review, and begin the Audit or launch the first high-performance campaigns.</li>
+        </ul>
+      `
+    }
+  ];
+
+  let activeFaq = null;
+  function toggleFaq(index) {
+    activeFaq = activeFaq === index ? null : index;
+  }
 </script>
 
 <section class="services-page">
@@ -77,14 +138,22 @@
       {#each packages as pkg, i}
         <Reveal delay={i * 150}>
           <div class="package-card" class:highlight={pkg.highlight}>
-            {#if pkg.highlight}
-              <span class="badge">Most Popular</span>
+            {#if pkg.badge || pkg.highlight}
+              <span class="badge">{pkg.badge || 'Growth On-Demand'}</span>
             {/if}
             
             <div class="package-header">
               <h2>{pkg.name}</h2>
               <p class="tagline">{pkg.tagline}</p>
-              <span class="price">{pkg.price}</span>
+              {#if pkg.billing}
+                <span class="billing-label">{pkg.billing}</span>
+              {/if}
+              <div class="price-wrap">
+                <span class="price">{pkg.price}</span>
+                {#if pkg.priceNote}
+                  <span class="price-note">{pkg.priceNote}</span>
+                {/if}
+              </div>
             </div>
 
             <p class="description">{pkg.description}</p>
@@ -105,6 +174,14 @@
               <p class="note">{pkg.note}</p>
             {/if}
 
+            {#if pkg.bonus}
+              <p class="bonus-note">🎁 {pkg.bonus}</p>
+            {/if}
+
+            {#if pkg.delivery}
+              <p class="delivery-time">⏰ {pkg.delivery}</p>
+            {/if}
+
             <a href="#/book-a-call" class="cta-button" class:primary={pkg.highlight}>
               {pkg.cta}
             </a>
@@ -117,8 +194,38 @@
     <Reveal>
       <div class="info-section">
         <h2>Not sure which option fits?</h2>
-        <p>Book a free 30-minute call. I'll review your current setup, answer your questions, and recommend the best path forward—no pressure, no pitch.</p>
-        <a href="#/book-a-call" class="btn-secondary">Book a Free Call</a>
+        <p>Book a free 30-minute strategy call.<br>No pitch, just clarity on your next steps.</p>
+        <a href="#/book-a-call" class="btn-secondary">Let's Talk</a>
+      </div>
+    </Reveal>
+
+    <!-- Extra Services -->
+    <Reveal>
+      <div class="extras-section">
+        <div class="extras-header">
+          <h2>Extra services</h2>
+          <p>Custom offer based on your specific needs. Request a free quote during our 30 minute call.</p>
+        </div>
+
+        <div class="extras-detailed-grid">
+          <div class="extra-category">
+            <h3>Creative Performance Services</h3>
+            <ul>
+              <li>UGC content</li>
+              <li>Canva Edition</li>
+              <li>Creative Support</li>
+            </ul>
+          </div>
+          
+          <div class="extra-category">
+            <h3>Website and Landing Page Development</h3>
+            <ul>
+              <li>Test Landing Pages built to perform</li>
+              <li>Improve your Conversion Rate</li>
+              <li>Create a custom website from scratch</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </Reveal>
 
@@ -126,28 +233,35 @@
     <Reveal>
       <div class="faq-mini">
         <h3>Common Questions</h3>
-        <div class="faq-grid">
-          <div class="faq-item">
-            <h4>What platforms do you work with?</h4>
-            <p>Google Ads, Meta (Facebook/Instagram), TikTok, LinkedIn, and Microsoft Ads. I recommend the best fit based on your business.</p>
-          </div>
-          <div class="faq-item">
-            <h4>Do you work with small budgets?</h4>
-            <p>I typically work with businesses spending $3k+/month on ads. If you're just starting, the Audit & Strategy package is a great first step.</p>
-          </div>
-          <div class="faq-item">
-            <h4>What industries do you specialize in?</h4>
-            <p>I've worked with e-commerce, SaaS, lead generation, and local businesses. I focus on performance, not just specific verticals.</p>
-          </div>
-          <div class="faq-item">
-            <h4>How quickly can we start?</h4>
-            <p>Depending on availability, typically within 1-2 weeks for audits and 2-3 weeks for full campaign launches.</p>
-          </div>
+        <div class="faq-accordion">
+          {#each faqs as faq, i}
+            <div class="faq-item" class:active={activeFaq === i}>
+              <button class="faq-question" on:click={() => toggleFaq(i)}>
+                <h4>{faq.question}</h4>
+                <span class="icon">
+                  {#if activeFaq === i}
+                    <Minus size={20} />
+                  {:else}
+                    <Plus size={20} />
+                  {/if}
+                </span>
+              </button>
+              {#if activeFaq === i}
+                <div class="faq-answer">
+                  <div class="answer-content">
+                    {@html faq.answer}
+                  </div>
+                </div>
+              {/if}
+            </div>
+          {/each}
         </div>
       </div>
     </Reveal>
   </div>
 </section>
+
+<Contact />
 
 <style>
   .services-page {
@@ -259,6 +373,46 @@
     margin-bottom: 1.5rem;
   }
 
+  .price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .billing-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .price-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .bonus-note, .delivery-time {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    background: #f8f8ff;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border: 1px dashed var(--accent-color);
+  }
+
+  .delivery-time {
+    background: #fff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0,0,0,0.05);
+  }
+
   .includes h3 {
     font-size: 0.9rem;
     text-transform: uppercase;
@@ -291,7 +445,7 @@
 
   .note {
     font-size: 0.85rem;
-    color: var(--accent-color);
+    color: var(--accent-muted);
     font-style: italic;
     background: rgba(119, 118, 226, 0.05);
     padding: 0.75rem;
@@ -373,41 +527,155 @@
 
   /* FAQ Mini */
   .faq-mini {
-    max-width: 1000px;
-    margin: 0 auto;
+    max-width: 800px;
+    margin: 4rem auto;
   }
 
   .faq-mini h3 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     text-align: center;
     margin-bottom: 3rem;
     color: var(--text-color);
   }
 
-  .faq-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+  .faq-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .faq-item {
     background: white;
-    padding: 2rem;
     border-radius: 12px;
     border: 1px solid rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 0.3s ease;
   }
 
-  .faq-item h4 {
-    font-size: 1.1rem;
-    margin-bottom: 0.75rem;
+  .faq-item.active {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 24px rgba(119, 118, 226, 0.1);
+  }
+
+  .faq-question {
+    width: 100%;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .faq-question h4 {
+    margin: 0;
+    font-size: 1.15rem;
     color: var(--text-color);
+    font-weight: 600;
   }
 
-  .faq-item p {
+  .faq-question .icon {
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .faq-answer {
+    padding: 0 2rem 1.5rem;
+  }
+
+  .answer-content {
     font-size: 0.95rem;
     color: var(--text-muted);
     line-height: 1.6;
+  }
+
+  .answer-content p {
+    margin-bottom: 1rem;
+  }
+
+  :global(.faq-list) {
+    padding-left: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  :global(.faq-list li) {
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+
+  .price-note {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-left: 0.5rem;
+    font-weight: 500;
+  }
+
+  /* Extras Section */
+  .extras-section {
+    margin-top: 6rem;
+    padding: 4rem;
+    background: white;
+    border-radius: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .extras-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .extras-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+  }
+
+  .extras-header p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .extras-detailed-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4rem;
+  }
+
+  .extra-category h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--accent-color);
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--accent-light);
+  }
+
+  .extra-category ul {
+    list-style: none;
+    padding: 0;
     margin: 0;
+  }
+
+  .extra-category li {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+  }
+
+  .extra-category li::before {
+    content: "●";
+    color: var(--accent-color);
+    font-size: 0.8rem;
   }
 
   /* Responsive */
@@ -437,12 +705,25 @@
       padding: 2rem;
     }
 
-    .faq-grid {
-      grid-template-columns: 1fr;
+    .faq-accordion {
+      gap: 0.75rem;
     }
 
     .info-section {
       padding: 3rem 1.5rem;
+    }
+
+    .extras-section {
+      padding: 2rem;
+    }
+
+    .extras-detailed-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .extras-header h2 {
+      font-size: 2rem;
     }
   }
 </style>

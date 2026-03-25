@@ -3,9 +3,9 @@
   
   const stats = [
     { value: '10+', label: 'Years Experience' },
-    { value: '7-Fig', label: 'Budgets Managed' },
-    { value: '100+', label: 'Campaigns Launched' },
-    { value: '3', label: 'Languages Spoken' }
+    { value: '6-Fig', label: 'Monthly Budgets' },
+    { value: '9', label: 'Global Brands' },
+    { value: '4', label: 'Languages Spoken' }
   ];
 
   const platforms = [

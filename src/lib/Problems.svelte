@@ -1,6 +1,6 @@
 <script>
   import Reveal from './Reveal.svelte';
-  import { Flame, BarChart3, DollarSign } from 'lucide-svelte';
+  import { BarChart3, Flame, DollarSign } from 'lucide-svelte';
 
   const items = [
     {
@@ -9,13 +9,13 @@
       icon: Flame
     },
     {
-      problem: "Drowning in data but missing insights?",
-      solution: "Clear reporting tied to actual business outcomes.",
+      problem: "Tired of 'vanity metrics' that don't match your bank balance?",
+      solution: "Clear, honest reporting tied to your actual business reality.",
       icon: BarChart3
     },
     {
-      problem: "Agency fees eating your margins?",
-      solution: "Senior-level execution without the overhead.",
+      problem: "Locked into rigid yearly contracts and hidden penalty fees?",
+      solution: "A flexible, margin-first partnership built on consistent results.",
       icon: DollarSign
     }
   ];
