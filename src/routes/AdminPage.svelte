@@ -37,10 +37,18 @@
   function handleLogout() {
     token.logout();
     activeTab = 'settings';
+    mobileMenuOpen = false;
   }
 
   // ── Tabs ──────────────────────────────────────────────────────────────────
   let activeTab = 'settings';
+  let mobileMenuOpen = false;
+
+  function switchTab(tab) {
+    activeTab = tab;
+    mobileMenuOpen = false;
+    if (tab === 'contacts') loadContacts();
+  }
 
   // ── Settings ─────────────────────────────────────────────────────────────
   let settings = { gtm_id: '', ga4_id: '', google_ads_id: '', meta_pixel_id: '', calendly_url: '' };
@@ -476,6 +484,46 @@
     </div>
 
   {:else}
+    <!-- MOBILE TOP BAR -->
+    <div class="mobile-topbar">
+      <div class="mobile-logo">
+        <span>Human</span>
+        <span class="login-badge">Admin</span>
+      </div>
+      <button class="mobile-menu-btn" on:click={() => mobileMenuOpen = !mobileMenuOpen} aria-label="Menu">
+        {#if mobileMenuOpen}
+          <X size={22} />
+        {:else}
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        {/if}
+      </button>
+    </div>
+
+    <!-- MOBILE DRAWER -->
+    {#if mobileMenuOpen}
+      <div class="mobile-drawer-overlay" on:click={() => mobileMenuOpen = false}></div>
+      <div class="mobile-drawer">
+        <div class="mobile-drawer-logo">
+          <span>Human</span>
+          <span class="login-badge">Admin</span>
+        </div>
+        <nav class="mobile-drawer-nav">
+          <button class="nav-item" class:active={activeTab === 'settings'} on:click={() => switchTab('settings')}>
+            <Settings size={18} /> API & Integrazioni
+          </button>
+          <button class="nav-item" class:active={activeTab === 'contacts'} on:click={() => switchTab('contacts')}>
+            <Users size={18} /> Contatti
+            {#if contacts.filter(c => c.status === 'new').length > 0}
+              <span class="badge">{contacts.filter(c => c.status === 'new').length}</span>
+            {/if}
+          </button>
+        </nav>
+        <button class="nav-item logout" on:click={handleLogout}>
+          <LogOut size={18} /> Esci
+        </button>
+      </div>
+    {/if}
+
     <!-- ADMIN SHELL -->
     <aside class="sidebar">
       <div class="sidebar-logo">
@@ -2103,10 +2151,110 @@
     50% { opacity: 0.6; }
   }
 
+  /* ── Mobile top bar ── */
+  .mobile-topbar {
+    display: none;
+  }
+
+  .mobile-drawer-overlay {
+    display: none;
+  }
+
+  .mobile-drawer {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     .sidebar { display: none; }
-    .admin-main { padding: 1.5rem 1rem; }
+    .admin-main { padding: 4.5rem 1rem 1.5rem; }
     .contacts-layout.split { grid-template-columns: 1fr; }
     .btn-export span { display: none; }
+
+    /* Top bar */
+    .mobile-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: white;
+      border-bottom: 1px solid #e8e8ed;
+      padding: 0.9rem 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .mobile-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #1a1a2e;
+    }
+
+    .mobile-menu-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #444;
+      display: flex;
+      align-items: center;
+      padding: 0.35rem;
+      border-radius: 8px;
+    }
+
+    .mobile-menu-btn:hover { background: #f5f5f7; }
+
+    /* Overlay */
+    .mobile-drawer-overlay {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,0.35);
+    }
+
+    /* Drawer */
+    .mobile-drawer {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 260px;
+      z-index: 400;
+      background: white;
+      border-right: 1px solid #e8e8ed;
+      padding: 1.5rem 0;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.12);
+    }
+
+    .mobile-drawer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #1a1a2e;
+      padding: 0 1.25rem 1.5rem;
+      border-bottom: 1px solid #e8e8ed;
+      margin-bottom: 1rem;
+    }
+
+    .mobile-drawer-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0 0.75rem;
+    }
+
+    .mobile-drawer .logout {
+      margin: 0.75rem;
+    }
   }
 </style>
