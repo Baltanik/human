@@ -14,15 +14,15 @@ app.use(express.json());
 // Health check
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
-// Auth
-app.post('/api/auth/login', (req, res) => {
+// Admin session (paths avoid "auth"/"login" — ad blockers often block those URLs)
+app.post('/api/session', (req, res) => {
   const { email, password } = req.body;
   const token = login(email, password);
   if (!token) return res.status(401).json({ error: 'Invalid credentials' });
   res.json({ token });
 });
 
-app.get('/api/auth/me', requireAuth, (req, res) => {
+app.get('/api/session', requireAuth, (req, res) => {
   res.json({ email: req.admin.sub, role: req.admin.role });
 });
 

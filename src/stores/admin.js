@@ -23,7 +23,11 @@ function createAuthStore() {
 export const token = createAuthStore();
 export const isAuthenticated = derived(token, $t => !!$t);
 
-export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+/** Empty = same-origin (/api → Vite proxy in dev, Nginx in prod). Set full URL only if API is on another host. */
+export const API_BASE =
+  import.meta.env.VITE_API_URL != null && String(import.meta.env.VITE_API_URL).length > 0
+    ? import.meta.env.VITE_API_URL
+    : '';
 
 export async function apiFetch(path, opts = {}) {
   let t;

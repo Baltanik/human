@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { API_BASE } from '../stores/admin.js';
   import Reveal from '../lib/Reveal.svelte';
   import { 
     Target, 
@@ -30,8 +31,7 @@
 
     // Load Calendly URL from backend settings
     try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-      const res = await fetch(`${apiBase}/api/settings`);
+      const res = await fetch(`${API_BASE}/api/settings`);
       if (res.ok) {
         const data = await res.json();
         calendlyUrl = data.calendly_url || '';
@@ -192,8 +192,7 @@
     submitError = '';
 
     try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-      const res = await fetch(`${apiBase}/api/contacts`, {
+      const res = await fetch(`${API_BASE}/api/contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -21,7 +21,7 @@
     loginLoading = true;
     loginError = '';
     try {
-      const { token: t } = await apiFetch('/api/auth/login', {
+      const { token: t } = await apiFetch('/api/session', {
         method: 'POST',
         body: { email: loginEmail, password: loginPassword }
       });

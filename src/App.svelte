@@ -10,6 +10,7 @@
   import BlogPage from './routes/BlogPage.svelte';
   import BlogPostPage from './routes/BlogPostPage.svelte';
   import AdminPage from './routes/AdminPage.svelte';
+  import { API_BASE } from './stores/admin.js';
 
   const routes = {
     '/': Home,
@@ -20,8 +21,6 @@
     '/blog/:slug': BlogPostPage,
     '/admin': AdminPage,
   };
-
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
   // Inject third-party tracking tags once, after settings load
   onMount(async () => {

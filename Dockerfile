@@ -7,7 +7,8 @@ RUN npm ci
 
 COPY . .
 # Build args are injected at build time by docker-compose
-ARG VITE_API_URL=/api
+# Leave empty: app calls /api/* on same origin; Nginx proxies to backend
+ARG VITE_API_URL=
 ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm run build
