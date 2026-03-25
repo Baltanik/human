@@ -254,6 +254,8 @@ services:
     depends_on:
       human_backend:
         condition: service_healthy
+      human_dist_init:
+        condition: service_completed_successfully
 
   # One-shot: compila il frontend e popola il volume dist
   human_dist_init:
@@ -263,16 +265,12 @@ services:
       args:
         VITE_API_URL: ""
     container_name: human_dist_init
-    command: sh -c "cp -r /app/dist/. /dist/"
+    command: sh -c "cp -r /app/dist/. /dist/ && echo 'dist copied'"
     volumes:
       - human_dist:/dist
     networks:
       - human_internal
     restart: "no"
-
-volumes:
-  human_db_data:
-  human_dist:
 ```
 
 ---
@@ -308,7 +306,8 @@ docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
 echo "[4/6] Collega Caddy alla rete human_external"
 docker network connect human_external one2one_caddy 2>/dev/null || echo "  Caddy già connesso a human_external"
 
-echo "[5/6] Ricarica Caddy (zero-downtime)"
+echo "[5/6] Valida e ricarica Caddy (zero-downtime)"
+docker exec one2one_caddy caddy validate --config /etc/caddy/Caddyfile
 docker exec one2one_caddy caddy reload --config /etc/caddy/Caddyfile
 
 echo "[6/6] Health check"
