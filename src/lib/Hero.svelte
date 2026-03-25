@@ -7,7 +7,7 @@
   let animationFrame;
   let width, height;
 
-  const LINE_COUNT = 40;
+  const LINE_COUNT = 32;
   const ACCENT_COLOR_RGB = '119, 118, 226';
   const SPEED = 0.005;
   let time = 0;
@@ -30,7 +30,7 @@
       const groupOffset = j * Math.PI * 2 / 3;
       for (let i = 0; i < LINE_COUNT; i++) {
         ctx.beginPath();
-        const alpha = (i / LINE_COUNT) * 0.5 + 0.1;
+        const alpha = (i / LINE_COUNT) * 0.2 + 0.04;
         ctx.strokeStyle = `rgba(${ACCENT_COLOR_RGB}, ${alpha})`;
 
         for (let x = 0; x < width; x += 5) {
@@ -95,7 +95,7 @@
     <Reveal delay={300}>
       <div class="actions">
         <a href="#/book-a-call" class="btn btn-primary">Let's Talk</a>
-        <a href="#about" class="btn btn-outline">See How It Works</a>
+        <a href="#process" class="btn btn-outline">See How It Works</a>
       </div>
     </Reveal>
 
@@ -299,35 +299,70 @@
 
   @media (max-width: 768px) {
     .hero {
-      padding: calc(var(--header-height) + 2rem) 0 4rem;
+      min-height: 100svh;
+      justify-content: center;
+      padding: calc(var(--header-height) + 1.5rem) 0 2.5rem;
     }
 
+    h1 {
+      font-size: 2.6rem;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      line-height: 1.65;
+    }
+
+    .actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn {
+      width: 100%;
+      text-align: center;
+      padding: 1rem 1.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* Stats: griglia 2x2 ben leggibile */
     .hero-stats {
       grid-template-columns: repeat(2, 1fr);
-      gap: 2rem 1rem;
-      margin-bottom: 3rem;
+      gap: 1.25rem 1rem;
+      margin-bottom: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* Piattaforme */
+    .platforms-label {
+      font-size: 0.72rem;
+      margin-bottom: 0.85rem;
     }
 
     .platforms-grid {
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
 
     .platform-item {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
     }
   }
 
-  @media (max-width: 600px) {
-    .actions {
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
-    .btn {
-      width: 100%;
-      max-width: 280px;
-      text-align: center;
-    }
-  }
 </style>

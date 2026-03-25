@@ -100,6 +100,6 @@
 <style>
   main {
     width: 100%;
-    overflow: hidden;
+    /* overflow: hidden removed — it broke IntersectionObserver on mobile */
   }
 </style>

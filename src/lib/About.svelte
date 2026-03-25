@@ -31,10 +31,20 @@
 
       <div class="content-col">
         <Reveal delay={100}>
-          <span class="label">About</span>
-          <h2>Arturo | Founder & Paid Media Strategist</h2>
-          <p class="lead">After a decade at top digital marketing agencies managing six-figure monthly budgets, I founded Human Marketing to give small and medium-sized businesses direct access to senior-level paid media expertise.</p>
-          <p>Having helped companies of all sizes validate and scale, my method combines deep technical knowledge with data analysis, rapid experimentation, and growth hacking. This approach is designed to refine processes, gather actionable learnings, and consistently achieve your business goals.</p>
+          <!-- mobile header: foto + label+titolo affiancati -->
+          <div class="mobile-header">
+            <img src="/1614590410625.jpeg" alt="Arturo Bueno" class="profile-photo-sm" />
+            <div class="mobile-header-text">
+              <span class="label">About</span>
+              <h2>Arturo<br><span class="role">Founder & Paid Media Strategist</span></h2>
+            </div>
+          </div>
+
+          <span class="label desktop-label">About</span>
+          <h2 class="desktop-h2">Arturo | Founder & Paid Media Strategist</h2>
+
+          <p class="lead">After a decade at top digital marketing agencies managing six-figure monthly budgets, I founded Human Marketing to give SMBs direct access to senior-level paid media expertise.</p>
+          <p class="body-text">Having helped companies of all sizes validate and scale, my method combines deep technical knowledge with data analysis, rapid experimentation, and growth hacking. This approach is designed to refine processes, gather actionable learnings, and consistently achieve your business goals.</p>
 
           <div class="specializations">
             <h3>Specializations</h3>
@@ -52,7 +62,7 @@
             </div>
             <div class="detail-item">
               <span class="detail-label">Languages</span>
-              <span class="detail-value">English, Spanish, Italian, Portuguese</span>
+              <span class="detail-value">EN · ES · IT · PT</span>
             </div>
           </div>
 
@@ -68,17 +78,6 @@
       </div>
     </div>
   </div>
-</section>
-
-<section class="about-cta">
-  <Reveal>
-    <div class="about-cta-inner">
-      <p class="cta-eyebrow">Ready to scale?</p>
-      <h2>Book a free 30-minute strategy call.</h2>
-      <p class="cta-sub">No pitch, just clarity on your next steps.</p>
-      <a href="#contact" class="btn btn-primary">Let's Talk</a>
-    </div>
-  </Reveal>
 </section>
 
 <style>
@@ -197,71 +196,109 @@
     font-weight: 500;
   }
 
+  /* Mobile header: hidden on desktop */
+  .mobile-header { display: none; }
+  .profile-photo-sm { display: none; }
+
   @media (max-width: 700px) {
+    section {
+      padding: 2.5rem 0;
+    }
+
+    /* Griglia desktop → colonna unica */
     .about-grid {
       grid-template-columns: 1fr;
-      text-align: center;
-      gap: 2rem;
+      gap: 1.5rem;
     }
-    .photo-col { display: flex; justify-content: center; }
-    .profile-photo { width: 140px; height: 140px; }
-    .details { flex-direction: column; gap: 1rem; align-items: center; }
-    .social-links { display: flex; justify-content: center; }
-  }
 
-  /* CTA */
-  .about-cta {
-    padding: 5rem 0;
-    background: linear-gradient(135deg, #1a1a2e 0%, #2d2b55 100%);
-    text-align: center;
-  }
+    /* Mostra mobile-header, nascondi versione desktop */
+    .photo-col { display: none; }
+    .desktop-label { display: none; }
+    .desktop-h2 { display: none; }
 
-  .about-cta-inner {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-  }
+    /* Mobile header: foto + identità affiancati */
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      margin-bottom: 1.25rem;
+    }
 
-  .cta-eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--accent-light);
-    margin-bottom: 1rem;
-  }
+    .profile-photo-sm {
+      display: block;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-light);
+      box-shadow: 0 6px 20px rgba(119,118,226,0.18);
+      flex-shrink: 0;
+    }
 
-  .about-cta h2 {
-    font-size: 2.2rem;
-    line-height: 1.2;
-    color: #ffffff;
-    margin-bottom: 0.75rem;
-  }
+    .mobile-header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
 
-  .cta-sub {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.65);
-    margin-bottom: 2rem;
-  }
+    .mobile-header-text .label {
+      font-size: 0.72rem;
+      margin-bottom: 0.15rem;
+    }
 
-  .btn-primary {
-    display: inline-block;
-    padding: 0.9rem 2.5rem;
-    background: var(--accent-color);
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1rem;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: background 0.2s ease, transform 0.15s ease;
-  }
+    .mobile-header-text h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 0;
+    }
 
-  .btn-primary:hover {
-    background: #5a59c8;
-    transform: translateY(-2px);
-  }
+    .mobile-header-text .role {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
 
-  @media (max-width: 700px) {
-    .about-cta h2 { font-size: 1.7rem; }
+    /* Testi: allineati a sinistra, leggibili */
+    .lead {
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1.65;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .body-text {
+      display: none;
+    }
+
+    .specializations {
+      margin-top: 0.5rem;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .specializations h3 {
+      font-size: 0.95rem;
+    }
+
+    .specializations li {
+      font-size: 0.9rem;
+    }
+
+    /* Details in riga */
+    .details {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.75rem 2rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      align-items: flex-start;
+    }
+
+    .detail-label { font-size: 0.7rem; }
+    .detail-value { font-size: 0.9rem; }
+
+    .social-links { margin-top: 1.25rem; }
   }
 </style>

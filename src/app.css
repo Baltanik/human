@@ -105,4 +105,10 @@ button {
   box-shadow: none;
 }
 
+@media (max-width: 768px) {
+  :root {
+    --padding-x: 1.15rem;
+  }
+}
+
 /* About page scroll gradient: managed inline via Svelte reactive style */

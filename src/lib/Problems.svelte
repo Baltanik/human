@@ -120,19 +120,74 @@
   }
 
   @media (max-width: 768px) {
+    .problems {
+      padding: 3rem 0;
+    }
+
+    h2 {
+      font-size: 1.9rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .items-grid {
+      gap: 0;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
     .item {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      text-align: center;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 0;
+      background: white;
+      border-radius: 0;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item:hover {
+      transform: none;
+      box-shadow: none;
     }
 
     .problem {
       flex-direction: column;
-      gap: 0.5rem;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 1.1rem 1rem;
+      background: #f8f8fb;
+      border-right: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .icon {
+      color: var(--accent-color);
+    }
+
+    .problem p {
+      font-size: 0.92rem;
+      line-height: 1.5;
+      font-weight: 500;
     }
 
     .arrow {
-      transform: rotate(90deg);
+      display: none;
+    }
+
+    .solution {
+      padding: 1.1rem 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .solution p {
+      font-size: 0.92rem;
+      line-height: 1.5;
+      font-weight: 600;
     }
   }
 </style>

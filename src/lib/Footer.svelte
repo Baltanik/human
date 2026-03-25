@@ -18,7 +18,7 @@
       </div>
 
       <div class="footer-links">
-        <div class="link-col">
+        <div class="link-col footer-nav-col">
           <h4>Navigation</h4>
           <ul>
             <li><a href="#/">Home</a></li>
@@ -27,19 +27,21 @@
           </ul>
         </div>
 
-        <div class="link-col">
-          <h4>Get Started</h4>
-          <ul>
-            <li><a href="#/book-a-call">Book a Call</a></li>
-            <li><a href="mailto:arturo@wearehumanmarketing.com">Email Me</a></li>
-          </ul>
-        </div>
+        <div class="footer-links-right">
+          <div class="link-col">
+            <h4>Get Started</h4>
+            <ul>
+              <li><a href="#/book-a-call">Book a Call</a></li>
+              <li><a href="mailto:arturo@wearehumanmarketing.com">Email Me</a></li>
+            </ul>
+          </div>
 
-        <div class="link-col">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#/blog">Blog</a></li>
-          </ul>
+          <div class="link-col">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="#/blog">Blog</a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -61,8 +63,9 @@
 
   .footer-main {
     display: grid;
-    grid-template-columns: 1.5fr 2fr;
-    gap: 6rem;
+    grid-template-columns: minmax(10rem, 14rem) 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
     padding-bottom: 3rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     margin-bottom: 2rem;
@@ -70,18 +73,18 @@
 
   /* Brand Section */
   .footer-brand h3 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: 1.125rem;
+    margin-bottom: 0.35rem;
     font-weight: 800;
     color: var(--text-color);
     letter-spacing: -0.02em;
   }
 
   .footer-brand p {
-    font-size: 1rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    margin-bottom: 0.85rem;
   }
 
   .socials {
@@ -110,18 +113,36 @@
     box-shadow: 0 4px 12px rgba(119, 118, 226, 0.3);
   }
 
-  /* Links Section */
+  /* Sempre una riga: Navigation | (Get Started + Resources). Mai stack verticale delle tre colonne. */
   .footer-links {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4rem;
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: start;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .footer-nav-col {
+    justify-self: start;
+  }
+
+  .footer-links-right {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(0.75rem, 2.5vw, 2rem);
+    min-width: 0;
+  }
+
+  .footer-links-right .link-col {
+    min-width: 0;
   }
 
   .link-col h4 {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 1.25rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.85rem;
     color: var(--text-color);
     font-weight: 700;
   }
@@ -133,8 +154,8 @@
   }
 
   .link-col li {
-    margin-bottom: 0.75rem;
-    font-size: 0.95rem;
+    margin-bottom: 0.55rem;
+    font-size: 0.875rem;
     color: var(--text-muted);
   }
 
@@ -159,27 +180,17 @@
     margin: 0;
   }
 
-  /* Responsive */
-  @media (max-width: 900px) {
+  /* Mobile: brand sopra, ma i link restano in riga (Nav | GS | Res). */
+  @media (max-width: 700px) {
     .footer-main {
       grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-
-    .footer-links {
-      grid-template-columns: 1fr;
-      gap: 2rem;
+      gap: 1.75rem;
     }
   }
 
   @media (max-width: 600px) {
     footer {
       padding: 4rem 0 2rem;
-    }
-
-    .footer-links {
-      grid-template-columns: 1fr;
-      gap: 2rem;
     }
 
     .footer-bottom {

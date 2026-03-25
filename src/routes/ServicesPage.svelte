@@ -49,7 +49,7 @@
       ],
       note: "Perfect for scale-ups and startups looking to grow sustainably. No retainer fee on budgets under $3.500 USD or €3.000 EUR.",
       cta: "Let's grow together",
-      highlight: false
+      highlight: true
     },
     {
       name: "Campaign Launch",
@@ -69,7 +69,7 @@
       ],
       note: "Perfect for startups and businesses with specific goals (promotions, product launch, smoke tests, business validation). No retainer fees for budgets under €2.000/month or $2.500 USD.",
       cta: "Launch your new campaigns now",
-      highlight: true
+      highlight: false
     }
   ];
 
@@ -298,6 +298,15 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     margin-bottom: 5rem;
+    align-items: stretch;
+  }
+
+  /* Reveal wrapper is the grid cell: fill row height so cards align */
+  .packages-grid > :global(.reveal) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
   }
 
   .package-card {
@@ -309,6 +318,9 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
   }
 
   .package-card:hover {
@@ -320,7 +332,8 @@
   .package-card.highlight {
     border-color: var(--accent-color);
     border-width: 3px;
-    box-shadow: 0 8px 32px rgba(119, 118, 226, 0.2);
+    box-shadow: 0 12px 40px rgba(119, 118, 226, 0.24);
+    z-index: 2;
   }
 
   .badge {
