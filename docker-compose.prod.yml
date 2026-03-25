@@ -30,12 +30,14 @@ services:
       target: production
     container_name: human_backend
     restart: unless-stopped
-    env_file: .env
+    # env_file interpola i $ nel hash bcrypt — il .env viene montato e letto
+    # direttamente da dotenv in Node, bypassando l'interpolazione di compose
+    volumes:
+      - ./.env:/app/.env:ro
+      - human_db_data:/app/data
     environment:
       NODE_ENV: production
       DB_PATH: /app/data/human.db
-    volumes:
-      - human_db_data:/app/data
     networks:
       - human_internal
     expose:
