@@ -1,0 +1,81 @@
+version: "3.9"
+
+# ── Reti ─────────────────────────────────────────────────────────────────────
+# human_external: Caddy → human_frontend (Caddy viene connesso manualmente
+#                 con `docker network connect human_external one2one_caddy`)
+# human_internal: human_frontend → human_backend (mai esposta a Caddy né a one2one)
+networks:
+  human_external:
+    name: human_external
+    driver: bridge
+  human_internal:
+    name: human_internal
+    driver: bridge
+    internal: true
+
+# ── Volumi ────────────────────────────────────────────────────────────────────
+volumes:
+  human_db_data:
+    name: human_db_data
+  human_dist:
+    name: human_dist
+
+# ── Servizi ───────────────────────────────────────────────────────────────────
+services:
+
+  # Express + SQLite — non raggiungibile dall'esterno
+  human_backend:
+    build:
+      context: .
+      target: production
+    container_name: human_backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DB_PATH: /app/data/human.db
+    volumes:
+      - human_db_data:/app/data
+    networks:
+      - human_internal
+    expose:
+      - "3001"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # One-shot: compila Svelte e popola il volume dist
+  human_dist_init:
+    build:
+      context: .
+      target: builder
+      args:
+        VITE_API_URL: ""
+    container_name: human_dist_init
+    command: sh -c "cp -r /app/dist/. /dist/ && echo 'dist copied'"
+    volumes:
+      - human_dist:/dist
+    networks:
+      - human_internal
+    restart: "no"
+
+  # Nginx — serve SPA statica + proxy /api → human_backend
+  human_frontend:
+    image: nginx:1.27-alpine
+    container_name: human_frontend
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - human_dist:/usr/share/nginx/html:ro
+    networks:
+      - human_external   # raggiungibile da Caddy
+      - human_internal   # può chiamare human_backend
+    expose:
+      - "80"
+    depends_on:
+      human_backend:
+        condition: service_healthy
+      human_dist_init:
+        condition: service_completed_successfully
